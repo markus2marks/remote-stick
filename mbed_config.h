@@ -22,8 +22,8 @@
 #define __MBED_CONFIG_DATA__
 
 // Configuration parameters
-#define CLOCK_SOURCE                                                          USE_PLL_HSE_EXTC|USE_PLL_HSI                                                                     // set by target:MCU_STM32F4
-#define LPTICKER_DELAY_TICKS                                                  1                                                                                                // set by target:MCU_STM32
+#define CLOCK_SOURCE                                                          USE_PLL_HSE_XTAL|USE_PLL_HSE                                                                     // set by target:MCU_STM32F4
+#define LPTICKER_DELAY_TICKS                                                  0                                                                                                // set by target:MCU_STM32
 #define MBED_CONF_ALT1250_PPP_BAUDRATE                                        115200                                                                                           // set by library:ALT1250_PPP
 #define MBED_CONF_ALT1250_PPP_PROVIDE_DEFAULT                                 0                                                                                                // set by library:ALT1250_PPP
 #define MBED_CONF_ATMEL_RF_ASSUME_SPACED_SPI                                  1                                                                                                // set by library:atmel-rf[STM]
@@ -355,11 +355,11 @@
 #define MBED_CONF_TARGET_DEFAULT_ADC_VREF                                     NAN                                                                                              // set by target:Target
 #define MBED_CONF_TARGET_INIT_US_TICKER_AT_BOOT                               1                                                                                                // set by target:MCU_STM32
 #define MBED_CONF_TARGET_INTERNAL_FLASH_UNIFORM_SECTORS                       0                                                                                                // set by target:MCU_STM32F4
-#define MBED_CONF_TARGET_LPTICKER_LPTIM_CLOCK                                 1                                                                                                // set by target:MCU_STM32
+#define MBED_CONF_TARGET_LPTICKER_LPTIM_CLOCK                                 0                                                                                                // set by target:MCU_STM32
 #define MBED_CONF_TARGET_LPUART_CLOCK_SOURCE                                  USE_LPUART_CLK_LSE|USE_LPUART_CLK_PCLK1                                                          // set by target:MCU_STM32
 #define MBED_CONF_TARGET_LSE_AVAILABLE                                        1                                                                                                // set by target:MCU_STM32
 #define MBED_CONF_TARGET_MPU_ROM_END                                          0x0fffffff                                                                                       // set by target:Target
-#define MBED_CONF_TARGET_TICKLESS_FROM_US_TICKER                              0                                                                                                // set by target:Target
+#define MBED_CONF_TARGET_TICKLESS_FROM_US_TICKER                              1                                                                                                // set by target:Target
 #define MBED_CONF_TARGET_XIP_ENABLE                                           0                                                                                                // set by target:Target
 #define MBED_CONF_TELIT_HE910_BAUDRATE                                        115200                                                                                           // set by library:TELIT_HE910
 #define MBED_CONF_TELIT_HE910_PROVIDE_DEFAULT                                 0                                                                                                // set by library:TELIT_HE910
@@ -373,7 +373,7 @@
 #define MBED_CONF_UBLOX_N2XX_PROVIDE_DEFAULT                                  0                                                                                                // set by library:UBLOX_N2XX
 #define MBED_CONF_UBLOX_PPP_BAUDRATE                                          115200                                                                                           // set by library:UBLOX_PPP
 #define MBED_CONF_UBLOX_PPP_PROVIDE_DEFAULT                                   0                                                                                                // set by library:UBLOX_PPP
-//#define MBED_CRC_TABLE_SIZE                                                   16                                                                                               // set by library:drivers
+#define MBED_CRC_TABLE_SIZE                                                   16                                                                                               // set by library:drivers
 #define MBED_LFS2_BLOCK_CYCLES                                                1024                                                                                             // set by library:littlefs2
 #define MBED_LFS2_BLOCK_SIZE                                                  512                                                                                              // set by library:littlefs2
 #define MBED_LFS2_CACHE_SIZE                                                  64                                                                                               // set by library:littlefs2

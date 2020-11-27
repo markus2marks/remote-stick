@@ -5,19 +5,35 @@
 
 #include "mbed.h"
 #include "platform/mbed_thread.h"
-
+#include "USBMouse.h"
 
 // Blinking rate in milliseconds
-#define BLINKING_RATE_MS                                                    500
+#define BLINKING_RATE_MS                                                    1000
+
+InterruptIn button(PA_6);
+USBMouse mouse;
+
+void button1_push()
+{
+	mouse.press(1);
+}
+
+
+void button1_unpressed()
+{
+	mouse.press(0);
+}
 
 
 int main()
 {
-    // Initialise the digital pin LED1 as an output
-    DigitalOut led(LED1);
 
+
+	button.rise(&button1_push);
+	button.fall(&button1_unpressed);
     while (true) {
-        led = !led;
+
         thread_sleep_for(BLINKING_RATE_MS);
+
     }
 }
