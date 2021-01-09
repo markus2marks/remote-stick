@@ -1,0 +1,3 @@
+mbed-os/targets/TARGET_STM/TARGET_STM32F4/TARGET_STM32F401xC/TOOLCHAIN_GCC_ARM/startup_stm32f401xc.o: \
+ ../mbed-os/targets/TARGET_STM/TARGET_STM32F4/TARGET_STM32F401xC/TOOLCHAIN_GCC_ARM/startup_stm32f401xc.S \
+ ../mbed_config.h
