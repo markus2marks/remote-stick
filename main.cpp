@@ -1,20 +1,20 @@
-/* mbed Microcontroller Library
- * Copyright (c) 2019 ARM Limited
- * SPDX-License-Identifier: Apache-2.0
+/*
+ *
+ *
  */
 
 #include "mbed.h"
 #include "platform/mbed_thread.h"
 #include "USBMouseKeyboard.h"
 
-// Blinking rate in milliseconds
-#define WAIT                                                    150
 
-InterruptIn buttonCenter(PA_0);
-InterruptIn buttonUp(PA_6);
-InterruptIn buttonDown(PA_1);
-InterruptIn buttonLeft(PA_3);
-InterruptIn buttonRight(PA_2);
+#define WAIT                                                    120
+
+InterruptIn buttonCenter(PA_2);
+InterruptIn buttonUp(PA_1);
+InterruptIn buttonDown(PA_6);
+InterruptIn buttonLeft(PA_4);
+InterruptIn buttonRight(PA_0);
 
 USBMouseKeyboard key_mouse;
 uint8_t button_center = 0;
@@ -83,7 +83,8 @@ void buttonRight_unpressed()
 
 void mouse_thread()
 {
-    while (true) {
+    while (true)
+    {
     	if(button_left == 1)
 		{
 			x -= 2;
@@ -142,35 +143,39 @@ int main()
 	//thread.start(mouse_thread);
 
 
-    while (true) {
-
-
+    while (true)
+    {
     	//key_mouse.press(button_center);
     	//key_mouse.move(x,y);
 
     	if(button_center == 1)
 		{
 			key_mouse.key_code(10U);
+			button_center = 0;
 		}
 
     	if(button_left == 1)
 		{
     		key_mouse.key_code(149U);
+    		button_left = 0;
 		}
 
     	if(button_right == 1)
 		{
 			key_mouse.key_code(148U);
+			button_right = 0;
 		}
 
     	if(button_down == 1)
 		{
 			key_mouse.key_code(150U);
+			button_down = 0;
 		}
 
 		if(button_up == 1)
 		{
 			key_mouse.key_code(151U);
+			button_up = 0;
 		}
 
         thread_sleep_for(WAIT);
