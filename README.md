@@ -9,3 +9,5 @@ Top:
 
 Buttom:
 ![remote stick buttom](buttom.png)
+
+Build command: mbed-tools compile --custom-targets-json remote-stick.json -m REMOTE-STICK -t GCC_ARM
