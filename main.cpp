@@ -9,6 +9,7 @@
 
 
 #define WAIT                                                    120
+#define WAIT_MOUSE_THREAD                                       40
 
 InterruptIn buttonCenter(PA_2);
 InterruptIn buttonUp(PA_1);
@@ -37,12 +38,13 @@ int16_t y = 0;
 int16_t x = 0;
 
 Thread thread;
-
+bool mouse_mode = false;
 /**
  * start the DFU bootloader
  */
 void startBootloader(void)
 {
+    key_mouse.deinit();
     void (*SysMemBootJump)(void);
     volatile uint32_t addr = 0x1FFF0000;
     HAL_RCC_DeInit();
@@ -152,32 +154,69 @@ void mouse_thread()
 {
     while (true)
     {
-        if(button_left == 1)
+        if(mouse_mode == true)
         {
-            x -= 2;
-        }
-        else if(button_right == 1)
-        {
-            x+= 2;
-        }
-        else
-        {
-            x = 0;
-        }
+            if(button_left == 1)
+            {
+                x -= 2;
+            }
+            else if(button_right == 1)
+            {
+                x+= 2;
+            }
+            else
+            {
+                x = 0;
+            }
 
-        if( button_down== 1)
-        {
-            y += 2;
-        }
-        else if(button_up == 1)
-        {
-            y -= 2;
+            if( button_down == 1)
+            {
+                y += 2;
+            }
+            else if(button_up == 1)
+            {
+                y -= 2;
+            }
+            else
+            {
+                y = 0;
+            }
+            key_mouse.press(button_center);
+            key_mouse.move(x,y);
         }
         else
         {
-            y = 0;
+            if(button_center == 1)
+            {
+               key_mouse.key_code(10U);
+               button_center = 0;
+            }
+
+            if(button_left == 1)
+            {
+               key_mouse.key_code(LEFT_ARROW);
+               button_left = 0;
+            }
+
+            if(button_right == 1)
+            {
+               key_mouse.key_code(RIGHT_ARROW);
+               button_right = 0;
+            }
+
+            if(button_down == 1)
+            {
+               key_mouse.key_code(DOWN_ARROW);
+               button_down = 0;
+            }
+
+            if(button_up == 1)
+            {
+               key_mouse.key_code(UP_ARROW);
+               button_up = 0;
+            }
         }
-        ThisThread::sleep_for(40);
+        ThisThread::sleep_for(WAIT_MOUSE_THREAD);
     }
 }
 
@@ -223,43 +262,17 @@ int main()
 
     buttonStf.rise(&buttonStf_pressed);
     buttonStf.fall(&buttonStf_unpressed);
-    //thread.start(mouse_thread);
+    thread.start(mouse_thread);
 
+    uint32_t button_timer = 0;
+    bool long_press = false;
 
     while (true)
     {
         //key_mouse.press(button_center);
         //key_mouse.move(x,y);
 
-        if(button_center == 1)
-        {
-            key_mouse.key_code(10U);
-            button_center = 0;
-        }
 
-        if(button_left == 1)
-        {
-            key_mouse.key_code(LEFT_ARROW);
-            button_left = 0;
-        }
-
-        if(button_right == 1)
-        {
-            key_mouse.key_code(RIGHT_ARROW);
-            button_right = 0;
-        }
-
-        if(button_down == 1)
-        {
-            key_mouse.key_code(DOWN_ARROW);
-            button_down = 0;
-        }
-
-        if(button_up == 1)
-        {
-            key_mouse.key_code(UP_ARROW);
-            button_up = 0;
-        }
 
         if((button_f1 == 1) && (button_f2 != 1) && (button_f3 != 1))
         {
@@ -273,10 +286,26 @@ int main()
             button_f2 = 0;
         }
 
-        if((button_f3 == 1) && (button_f1 != 1) && (button_f2 != 1))
+        if((button_f3 == 1) && (button_f1 != 1) && (button_f2 != 1) && (long_press == false))
         {
             //keycode escape
-            key_mouse.key_code(1u);
+            key_mouse.key_code(0);
+            long_press = true;
+        }
+        else if((long_press == true) && (button_f3 == 1))
+        {
+            button_timer++;
+            if(button_timer > 10)
+            {
+                mouse_mode^= true;
+                button_timer = 0;
+                long_press = false;
+            }
+        }
+        else
+        {
+            long_press = false;
+            button_timer = 0;
             button_f3 = 0;
         }
 
@@ -285,12 +314,12 @@ int main()
         {
             if(stf_mode == 1)
             {
-                key_mouse.key_code('V');
+                key_mouse.key_code(86, KEY_SHIFT); //V
                 stf_mode = 0;
             }
             else
             {
-                key_mouse.key_code('S');
+                key_mouse.key_code(83, KEY_SHIFT); //S
                 stf_mode = 1;
             }
 
