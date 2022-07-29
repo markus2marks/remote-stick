@@ -16,6 +16,7 @@ add_subdirectory(TARGET_F401)
 
 add_executable(${APP_TARGET}
     main.cpp
+    remote_stick.cpp
 )
 
 target_link_libraries(${APP_TARGET} mbed-os mbed-stm32f401xe mbed-remote-stick mbed-core mbed-rtos mbed-events mbed-usb)
