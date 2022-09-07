@@ -10,7 +10,6 @@
 
 #define WAIT                                                    120
 #define WAIT_MOUSE_THREAD                                       40
-#define BUTTON_WAIT_TIME                                        10
 #define BUTTON_VALUE_V                                          86
 #define BUTTON_VALUE_S                                          83
 
@@ -132,9 +131,10 @@ void mouse_thread()
 int main()
 {
     bool stf_mode = false;
-    uint32_t button_timer = 0;
-    bool long_press = false;
+    uint32_t button_press_time= 0;
 
+    bool button_f3_temp = false;
+    bool button_stf_temp = false;
 
     thread.start(mouse_thread);
 
@@ -151,32 +151,28 @@ int main()
             key_mouse.key_code(KEY_F2);
             Remote_Stick::button_f2 = false;
         }
-
-        if((Remote_Stick::button_f3 == true) && (Remote_Stick::button_f1 != true) && (Remote_Stick::button_f2 != true) && (long_press == false))
+//rising edge
+        if((Remote_Stick::button_f3 == true) && (button_f3_temp == false) && (Remote_Stick::button_f1 != true) && (Remote_Stick::button_f2 != true))
         {
-            //keycode escape
-            key_mouse.key_code(0);
-            long_press = true;
+            button_press_time = Kernel::get_ms_count();
         }
-        else if((long_press == true) && (Remote_Stick::button_f3 == true))
+//falling edge
+        else if((Remote_Stick::button_f3 == false) && (button_f3_temp == true) && (Remote_Stick::button_f1 != true) && (Remote_Stick::button_f2 != true))
         {
-            button_timer++;
-            if(button_timer > BUTTON_WAIT_TIME)
+
+            if((Kernel::get_ms_count() - button_press_time) < 1000)
+            {
+                //keycode escape
+                key_mouse.key_code(0);
+            }
+            else
             {
                 mouse_mode ^= true;
-                button_timer = 0;
-                long_press = false;
             }
         }
-        else
-        {
-            long_press = false;
-            button_timer = 0;
-            Remote_Stick::button_f3 = false;
-        }
 
 
-        if(Remote_Stick::button_stf == true)
+        if((Remote_Stick::button_stf == true) && (button_stf_temp == false))
         {
             if(stf_mode == true)
             {
@@ -188,8 +184,6 @@ int main()
                 key_mouse.key_code(BUTTON_VALUE_S, KEY_SHIFT); //S
                 stf_mode = true;
             }
-
-            Remote_Stick::button_f1 = false;
         }
 
         if((Remote_Stick::button_f1 == true) && (Remote_Stick::button_f2 == true) && (Remote_Stick::button_f3 == true))
@@ -197,6 +191,11 @@ int main()
 
             startBootloader();
         }
+
+
+        button_f3_temp = Remote_Stick::button_f3;
+        button_stf_temp = Remote_Stick::button_stf;
+
         thread_sleep_for(WAIT);
     }
 }
