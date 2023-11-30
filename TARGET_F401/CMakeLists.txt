@@ -8,4 +8,5 @@ target_include_directories(mbed-remote-stick
 target_sources(mbed-remote-stick
     	INTERFACE
 	PeripheralPins.c
+	system_clock.c
 )

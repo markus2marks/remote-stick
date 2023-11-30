@@ -19,7 +19,7 @@ add_executable(${APP_TARGET}
     remote_stick.cpp
 )
 
-target_link_libraries(${APP_TARGET} mbed-os mbed-stm32f401xe mbed-remote-stick mbed-core mbed-rtos mbed-events mbed-usb)
+target_link_libraries(${APP_TARGET} mbed-os mbed-stm32f401xc mbed-remote-stick mbed-core mbed-rtos mbed-events mbed-usb)
 
 mbed_set_post_build(${APP_TARGET})
 
